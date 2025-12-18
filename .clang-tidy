@@ -1,0 +1,106 @@
+# .clang-tidy
+Checks: >
+    *,
+    -altera-*,
+    -fuchsia-*,
+    -zircon-*,
+    -android-*,
+    -cppcoreguidelines-avoid-magic-numbers,
+    -readability-magic-numbers,
+    -modernize-use-trailing-return-type,
+    -llvm-*,
+    -llvmlibc-*
+
+# 格式选项
+FormatStyle: file  # 使用项目中的.clang-format文件
+
+# 检查选项
+WarningsAsErrors: '*'
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
+  - key: readability-identifier-naming.MemberCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.NamespaceCase
+    value: lowercase
+
+# 现代C++特性检查
+CheckOptions:
+  - key: modernize-use-nodiscard.Macros
+    value: 'MY_NODISCARD'
+  - key: modernize-use-using.IgnoreMacros
+    value: true
+
+# 头文件检查
+HeaderFilterRegex: '.*'
+
+# 不检查的系统头文件
+SystemHeaders: false
+
+# 并行检查
+UseColor: true
+
+# 输出格式
+Format: text
+
+# 其他选项
+---
+Checks: |
+  bugprone-*,
+  cert-*,
+  cppcoreguidelines-*,
+  clang-analyzer-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  hicpp-*
+
+# 特定检查的配置
+CheckOptions:
+  # 智能指针检查
+  - key: modernize-make-unique.IgnoreMacros
+    value: true
+  - key: modernize-make-shared.IgnoreMacros
+    value: true
+  
+  # 空容器检查
+  - key: readability-container-size-empty.IgnoreMacros
+    value: true
+  
+  # 自动类型推导
+  - key: modernize-use-auto.MinTypeNameLength
+    value: 10
+  
+  # 范围for循环
+  - key: modernize-loop-convert.MaxCopySize
+    value: 16
+  
+  # 弃用检查
+  - key: modernize-replace-auto-ptr.IncludeStyle
+    value: string
+  
+  # 异常检查
+  - key: cert-err09-cpp.ThrowByValueCatchByRef
+    value: true
+
+# 不检查的目录
+ExcludePaths:
+  - '.build/'
+  - '.project/'
+  - '.install/'
+  - 'third_party/'
+  - 'external/'
+  - 'cmake-build-*/'
+  - '.*/tests?/'
