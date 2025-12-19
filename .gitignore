@@ -3,5 +3,5 @@
 .qmlls.ini
 .vscode/
 .git/
-.project/
 FiModule.h
+.fi_local

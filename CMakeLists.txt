@@ -1,15 +1,25 @@
-include(.project/cmake/Version.cmake)
-
+include(.project/cmake/Project.cmake)
 cmake_minimum_required(VERSION 4.2)
-project(Fi VERSION 0 LANGUAGES CXX)
+project(Fi VERSION ${fi_version} LANGUAGES CXX)
 
-fi_has_git(has_git)
-fi_git_desc(git_desc)
-fi_git_version(git_version)
 
-message("${has_git}")
-message("${git_desc}")
-message("${git_version}")
+fi_import(
+    Qt6
+    COMPONENTS Core Qml
+)
+fi_import(SQLite3)
+fi_import(Catch2)
+fi_import(Eigen3)
+fi_import(Sophus)
+fi_import(ExprTk)
+fi_import(OpenCV)
+fi_import(VTK)
+fi_import(ITK)
 
-# fi_project_begin()
-# fi_project_end()
+fi_project(
+    TESTING
+)
+
+
+
+
