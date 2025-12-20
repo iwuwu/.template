@@ -1,7 +1,6 @@
 include(.project/cmake/Project.cmake)
 cmake_minimum_required(VERSION 4.2)
-project(Fi VERSION ${fi_version} LANGUAGES CXX)
-
+project(Fi VERSION ${fi_git_version} LANGUAGES CXX)
 
 fi_import(
     Qt6
@@ -16,9 +15,7 @@ fi_import(OpenCV)
 fi_import(VTK)
 fi_import(ITK)
 
-fi_project(
-    TESTING
-)
+fi_project()
 
 
 

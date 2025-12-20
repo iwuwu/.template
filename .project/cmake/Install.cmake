@@ -1,3 +1,4 @@
+# 可以给出一系列路径，选出第一个可用路径设置
 function(fi_set_install_prefix)
     foreach(path IN LISTS ARGV)
         if(NOT path)
@@ -12,4 +13,5 @@ function(fi_set_install_prefix)
             return()
         endif()
     endforeach()
+    message("给出的所有安装路径都不可用，将安装到系统路径${CMAKE_INSTALL_PREFIX}")
 endfunction()

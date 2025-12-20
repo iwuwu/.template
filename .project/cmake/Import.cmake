@@ -6,9 +6,9 @@ macro(fi_import_by_default package_name)
             ${ARGN}
             QUIET
         )
-    if(NOT ${package_name}_FOUND)
-        message("失败: 默认规则搜索未找到包")
-    endif()
+        if(NOT ${package_name}_FOUND)
+            message("失败: 默认规则搜索未找到CMake包配置文件")
+        endif()
     endif()
 endmacro()
 
@@ -19,12 +19,12 @@ macro(fi_import_by_env_path package_name)
             find_package(
                 ${package_name}
                 ${ARGN}
-                HINTS $ENV{${package_name}_PATH}
+                HINTS "$ENV{${package_name}_PATH}"
                 NO_DEFAULT_PATH
                 QUIET
             )
             if(NOT ${package_name}_FOUND)
-                message("失败: 路径中未找到包")
+                message("失败: 路径中未找到CMake包配置文件")
                 fi_import_by_default(${package_name} ${ARGN})
             endif()
         else()
@@ -38,7 +38,7 @@ endmacro()
 
 macro(fi_import_by_file_path package_name)
     if(${package_name}_PATH)
-        message("导入: ${package_name} 使用本地文件变量 ${package_name}_PATH: ${${package_name}_PATH}")
+        message("导入: ${package_name} 使用LOCAL文件变量 ${package_name}_PATH: ${${package_name}_PATH}")
         if(IS_DIRECTORY "${${package_name}_PATH}")
             find_package(
                 ${package_name}
@@ -48,7 +48,7 @@ macro(fi_import_by_file_path package_name)
                 QUIET
             )
             if(NOT ${package_name}_FOUND)
-                message("失败: 路径中未找到包")
+                message("失败: 路径中未找到CMake包配置文件")
                 fi_import_by_env_path(${package_name} ${ARGN})
             endif()
         else()
@@ -73,7 +73,7 @@ macro(fi_import_by_path package_name path)
                 QUIET
             )
             if(NOT ${package_name}_FOUND)
-                message("失败: 路径中未找到包")
+                message("失败: 路径中未找到CMake包配置文件")
                 fi_import_by_file_path(${package_name} ${ARGN})
             endif()
         else()
@@ -85,15 +85,6 @@ macro(fi_import_by_path package_name path)
     endif()
 endmacro()
 
-macro(fi_clear_vars prefix)
-    get_cmake_property(fi_variable_names VARIABLES)
-    list(FILTER fi_variable_names INCLUDE REGEX "${prefix}.*")
-    foreach(var IN LISTS fi_variable_names)
-        unset(${var})
-    endforeach()
-    unset(fi_variable_names)
-endmacro()
-
 macro(fi_import package_name)
     message("================================================")
     cmake_parse_arguments(
@@ -103,26 +94,29 @@ macro(fi_import package_name)
         ""
         ${ARGN}
     )
-    
-    get_property(fi_import_targets DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-    list(FILTER fi_import_targets INCLUDE REGEX "^${package_name}::.*")
 
-    if(NOT fi_import_targets)
-        get_property(fi_import_targets_before DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-    endif()
-        fi_import_by_path("${package_name}" "${fi_import_PATH}" ${fi_import_UNPARSED_ARGUMENTS})
-    if(NOT fi_import_targets)
+    if(${package_name}_FOUND)
+        message("导入: ${package_name} 使用LOCAL文件手工导入")
         get_property(fi_import_targets DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-        list(REMOVE_ITEM fi_import_targets ${fi_import_targets_before})
+        list(FILTER fi_import_targets INCLUDE REGEX "(${package_name}::.*)|(.*::${package_name}.*)")
+    else()
+        if(NOT fi_import_targets)
+            get_property(fi_import_targets_before DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
+        endif()
+
+        fi_import_by_path("${package_name}" "${fi_import_PATH}" ${fi_import_UNPARSED_ARGUMENTS})
+
+        if(NOT fi_import_targets)
+            get_property(fi_import_targets DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
+            list(REMOVE_ITEM fi_import_targets ${fi_import_targets_before})
+        endif()
+
+        get_cmake_property(fi_import_vars VARIABLES)
+        list(FILTER fi_import_vars INCLUDE REGEX "^${package_name}_LIB.*")
+
+        list(APPEND fi_import_vars ${fi_import_cache_vars})
+        list(REMOVE_DUPLICATES fi_import_vars)
     endif()
-
-    get_cmake_property(fi_import_vars VARIABLES)
-    list(FILTER fi_import_vars INCLUDE REGEX "^${package_name}_LIB.*")
-    # get_cmake_property(fi_import_cache_vars CACHE_VARIABLES)
-    # list(FILTER fi_import_cache_vars INCLUDE REGEX "^${package_name}_LIB.*")
-
-    list(APPEND fi_import_vars ${fi_import_cache_vars})
-    list(REMOVE_DUPLICATES fi_import_vars)
 
     if(${package_name}_FOUND)
         if(${package_name}_DIR)
@@ -140,14 +134,14 @@ macro(fi_import package_name)
                 list(SUBLIST fi_import_targets 0 3 fi_import_targets)
                 list(APPEND fi_import_targets "...")
             endif()
-            
+
 
             list(LENGTH fi_import_vars fi_import_vars_len)
             if(fi_import_vars_len GREATER 3)
                 list(SUBLIST fi_import_vars 0 3 fi_import_vars)
                 list(APPEND fi_import_vars "...")
             endif()
-            
+
         endif()
 
         if(fi_import_targets)
