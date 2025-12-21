@@ -1,17 +1,12 @@
-# 可以给出一系列路径，选出第一个可用路径设置
-function(fi_set_install_prefix)
-    foreach(path IN LISTS ARGV)
-        if(NOT path)
-            continue()
-        endif()
-        cmake_path(SET path NORMALIZE "${path}")
-        cmake_path(IS_ABSOLUTE path is_vaild)
-        if(is_vaild)
-            message("安装位置: ${path}")
-            # 因为在下层函数中，所以需要使用CACHE变量全局生效
-            set(CMAKE_INSTALL_PREFIX "${path}" CACHE PATH "安装根路径" FORCE)
-            return()
+function(fi_get_sub_packages output)
+    fi_get_sub_folders(${output})
+    foreach(folder IN LISTS ${output})
+        get_filename_component(name ${folder} NAME)
+        if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${folder}/${name}Config.cmake" AND NOT EXISTS "${CMAKE_SOURCE_DIR}/${folder}/${name}-config.cmake")
+            list(REMOVE_ITEM ${output} ${folder})
         endif()
     endforeach()
-    message("给出的所有安装路径都不可用，将安装到系统路径${CMAKE_INSTALL_PREFIX}")
+    set(${output} ${${output}} PARENT_SCOPE)
 endfunction()
+
+

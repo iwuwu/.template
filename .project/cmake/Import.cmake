@@ -135,7 +135,6 @@ macro(fi_import package_name)
                 list(APPEND fi_import_targets "...")
             endif()
 
-
             list(LENGTH fi_import_vars fi_import_vars_len)
             if(fi_import_vars_len GREATER 3)
                 list(SUBLIST fi_import_vars 0 3 fi_import_vars)
