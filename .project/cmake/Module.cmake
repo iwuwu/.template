@@ -45,7 +45,20 @@ function(fi_module)
         "PUBLIC;PRIVATE;INTERFACE;DEPENDS;IMPORTS"
     )
 
-    fi_set_module_names()
+    cmake_path(RELATIVE_PATH CMAKE_CURRENT_SOURCE_DIR BASE_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE fi_module_path)
+    if(fi_module_path)
+        cmake_path(GET fi_module_path STEM fi_module_last_name PARENT_PATH fi_module_parent_path)
+        string(REPLACE "/" "." fi_module_uri ${fi_module_path})
+        string(REPLACE "/" "_" fi_module_target ${fi_module_path})
+        string(REPLACE "/" "::" fi_module_namespace ${fi_module_path})
+        string(REPLACE "/" "" fi_module_camel_name ${fi_module_path})
+        string(TOUPPER "${fi_module_target}" fi_module_upper_target)
+        if(fi_module_parent_path)
+
+        endif()
+    else()
+        return()
+    endif()
     fi_set_module_files()
 
     if(fi_module_QML)

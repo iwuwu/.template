@@ -10,18 +10,17 @@ endmacro()
 # 可以给出一系列路径，选出第一个可用路径设置
 function(fi_set_install_prefix)
     foreach(path IN LISTS ARGV)
-        if(NOT path)
-            continue()
-        endif()
         cmake_path(SET path NORMALIZE "${path}")
         cmake_path(IS_ABSOLUTE path is_vaild)
         if(is_vaild)
-            set(CMAKE_INSTALL_PREFIX "${path}" CACHE PATH "安装根路径" FORCE)
+            set(CMAKE_INSTALL_PREFIX "${path}" PARENT_SCOPE)
             return()
         endif()
     endforeach()
 endfunction()
 
+
+# 这里查询次数太多了，可改成一次查询
 macro(fi_get_git_vars)
     find_package(Git QUIET)
     if(Git_FOUND)

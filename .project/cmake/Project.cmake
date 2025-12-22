@@ -9,13 +9,11 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/.fi_local)
     include(${CMAKE_SOURCE_DIR}/.fi_local)
 endif()
 
-cmake_path(GET CMAKE_SOURCE_DIR STEM fi_root_name)
+cmake_path(GET CMAKE_SOURCE_DIR STEM fi_project_root_name)
 
 fi_get_git_vars()
 
-message("================================================")
-message("${fi_root_name} ${fi_git_version} 配置开始")
-message("${fi_git_branch} 分支第 ${fi_git_commit_count} 次提交: ${fi_git_hash}")
+set(fi_project_version ${fi_git_version})
 
 # 设置项目变量
 # cmake_policy(SET CMP0048 NEW)
@@ -76,11 +74,12 @@ macro(fi_project)
     else()
         set(CMAKE_BUILD_TYPE "Debug")
     endif()
-
-    fi_set_install_prefix(
-        "${fi_project_INSTALL_PATH}"
-        "${CMAKE_SOURCE_DIR}/.install"
-    )
+    if(fi_project_INSTALL_PATH)
+        fi_set_install_prefix(
+            "${fi_project_INSTALL_PATH}"
+            "${CMAKE_SOURCE_DIR}/.install/${PROJECT_VERSION}/${CMAKE_BUILD_TYPE}/"
+        )
+    endif()
 
     if(ENABLE_TESTING)
         # include会自动enable_testing, 无需再设置
@@ -96,16 +95,17 @@ macro(fi_project)
     # fi_add_sub_module()
 
     message("================================================")
-    message("项目配置完成")
+    message("${PROJECT_NAME} ${PROJECT_VERSION} 配置完成")
+    message("代码基点: 分支 ${fi_git_branch} 第 ${fi_git_commit_count} 次提交 ${fi_git_hash}")
     if(ENABLE_TESTING)
         message("单元测试: 开启")
     else()
         message("单元测试: 关闭")
     endif()
     if(BUILD_SHARED_LIBS)
-        message("构建类型: Shared ${CMAKE_BUILD_TYPE}")
+        message("构建类型: ${CMAKE_BUILD_TYPE} 动态库")
     else()
-        message("构建类型: Static ${CMAKE_BUILD_TYPE}")
+        message("构建类型: ${CMAKE_BUILD_TYPE}静态库")
     endif()
     message("构建位置: ${CMAKE_BINARY_DIR}")
     message("安装位置: ${CMAKE_INSTALL_PREFIX}")

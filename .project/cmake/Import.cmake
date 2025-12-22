@@ -95,30 +95,34 @@ macro(fi_import package_name)
         ${ARGN}
     )
 
+
     if(${package_name}_FOUND)
         message("导入: ${package_name} 使用LOCAL文件手工导入")
-        get_property(fi_import_targets DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-        list(FILTER fi_import_targets INCLUDE REGEX "(${package_name}::.*)|(.*::${package_name}.*)")
     else()
-        if(NOT fi_import_targets)
-            get_property(fi_import_targets_before DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-        endif()
-
+        get_property(fi_import_targets_before DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
         fi_import_by_path("${package_name}" "${fi_import_PATH}" ${fi_import_UNPARSED_ARGUMENTS})
+        get_property(fi_import_targets_after DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
+    endif()
 
-        if(NOT fi_import_targets)
+    if(${package_name}_FOUND)
+        if(fi_import_targets_after)
+            set(fi_import_targets ${fi_import_targets_after})
+        else()
             get_property(fi_import_targets DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-            list(REMOVE_ITEM fi_import_targets ${fi_import_targets_before})
         endif()
+
+        list(FILTER fi_import_targets INCLUDE REGEX "(${package_name}::.*)|(.*::${package_name}.*)")
+        list(SORT fi_import_targets)
+
+        list(REMOVE_ITEM fi_import_targets_after ${fi_import_targets_before})
+        list(SORT fi_import_targets_after)
+
+        list(APPEND fi_import_targets ${fi_import_targets_after})
+        list(REMOVE_DUPLICATES fi_import_targets)
 
         get_cmake_property(fi_import_vars VARIABLES)
         list(FILTER fi_import_vars INCLUDE REGEX "^${package_name}_LIB.*")
 
-        list(APPEND fi_import_vars ${fi_import_cache_vars})
-        list(REMOVE_DUPLICATES fi_import_vars)
-    endif()
-
-    if(${package_name}_FOUND)
         if(${package_name}_DIR)
             set(fi_import_package_dir ${${package_name}_DIR})
         elseif(${package_name}_INCLUDE_DIR)
