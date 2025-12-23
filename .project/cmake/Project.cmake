@@ -1,7 +1,7 @@
 set(fi_project_cmake_dir ${CMAKE_CURRENT_LIST_DIR})
 include(${fi_project_cmake_dir}/Utility.cmake)
 include(${fi_project_cmake_dir}/Import.cmake)
-include(${fi_project_cmake_dir}/Module.cmake)
+include(${fi_project_cmake_dir}/Folder.cmake)
 
 
 # 导入本地设置变量
@@ -11,7 +11,7 @@ endif()
 
 cmake_path(GET CMAKE_SOURCE_DIR STEM fi_project_root_name)
 
-fi_get_git_vars()
+fi_set_git_vars()
 
 set(fi_project_version ${fi_git_version})
 
@@ -29,6 +29,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_PACKAGE_DEPENDENCIES ON)
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "26.0")
@@ -61,7 +62,9 @@ macro(fi_project)
     qt_standard_project_setup(REQUIRES ${Qt6_VERSION})
 
     # 编译和启用测试
-    set(ENABLE_TESTING ${fi_project_TESTING})
+    if(fi_project_TESTING)
+        set(ENABLE_TESTING ${fi_project_TESTING})
+    endif()
 
     if(fi_project_STATIC)
         set(BUILD_SHARED_LIBS OFF)
@@ -91,9 +94,8 @@ macro(fi_project)
         endif()
     endif()
 
-
-    # fi_add_sub_module()
-
+    message("================================================")
+    fi_add_subfolder()
     message("================================================")
     message("${PROJECT_NAME} ${PROJECT_VERSION} 配置完成")
     message("代码基点: 分支 ${fi_git_branch} 第 ${fi_git_commit_count} 次提交 ${fi_git_hash}")

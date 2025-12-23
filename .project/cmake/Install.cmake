@@ -9,4 +9,7 @@ function(fi_get_sub_packages output)
     set(${output} ${${output}} PARENT_SCOPE)
 endfunction()
 
+function(fi_install targets)
+endfunction()
+
 

@@ -21,7 +21,7 @@ endfunction()
 
 
 # 这里查询次数太多了，可改成一次查询
-macro(fi_get_git_vars)
+macro(fi_set_git_vars)
     find_package(Git QUIET)
     if(Git_FOUND)
         # 检查是否为Git仓库

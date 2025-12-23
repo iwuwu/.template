@@ -1,4 +1,4 @@
 fi_folder(
-    QML
+    LIB
     TEST MAIN
 )
