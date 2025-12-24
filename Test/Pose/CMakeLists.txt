@@ -1,4 +1,4 @@
 fi_folder(
     LIB
-    TEST MAIN
+    PRIVATE Eigen3::Eigen
 )

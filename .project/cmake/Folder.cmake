@@ -33,6 +33,7 @@ function(fi_add_subfolder)
 endfunction()
 
 function(fi_folder)
+    cmake_policy(SET CMP0174 NEW)
     cmake_parse_arguments(PARSE_ARGV
         0
         fi_folder
@@ -45,6 +46,9 @@ function(fi_folder)
     if(NOT fi_folder_path)
         return()
     endif()
+
+    message("================================================")
+    message("添加: ${fi_folder_path}")
 
     cmake_path(GET fi_folder_path STEM fi_folder_last_name)
     string(REPLACE "/" "." fi_folder_uri ${fi_folder_path})
@@ -66,11 +70,11 @@ function(fi_folder)
     fi_set_folder_files()
 
     if(NOT fi_folder_VERSION)
-        set(fi_folder_version ${PROJECT_VERSION})
+        set(fi_folder_VERSION ${PROJECT_VERSION})
     endif()
 
     if(fi_folder_PROJECT)
-        project(${fi_folder_name} VERSION ${fi_folder_version} LANGUAGES CXX)
+        project(${fi_folder_name} VERSION ${fi_folder_VERSION} LANGUAGES CXX)
     endif()
 
     if(fi_folder_QML)
@@ -81,22 +85,17 @@ function(fi_folder)
         if(fi_folder_IMPORTS)
             fi_add_folder("${fi_folder_IMPORTS}")
         endif()
-        fi_add_qml()
+        fi_add_qml("${fi_folder_name}")
+    elseif(fi_folder_LIB)
+        fi_add_lib("${fi_folder_name}")
     endif()
 
-    if(fi_folder_LIB AND NOT fi_folder_QML)
-        fi_add_lib()
+    if(DEFINED fi_folder_TEST AND ENABLE_TESTING)
+        fi_add_test("${fi_folder_name}_test" "${fi_folder_TEST}")
+    elseif(fi_folder_EXE)
+        fi_add_exe("${fi_folder_name}_exe")
     endif()
 
-    if(fi_folder_EXE AND NOT fi_folder_LIB)
-        fi_add_exe()
-    endif()
-
-    if(DEFINED fi_folder_TEST AND ENABLE_TESTING AND NOT fi_folder_EXE AND NOT fi_folder_LIB)
-        fi_add_test("${fi_folder_TEST}")
-    endif()
-
-    message("${fi_folder_targets}")
     fi_install("${fi_folder_targets}")
     unset(fi_folder_targets)
     fi_add_subfolder()

@@ -1,3 +1,4 @@
 fi_folder(
-    QML EXE
+    PROJECT
+    VERSION 1.0.0.1
 )

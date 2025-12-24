@@ -42,9 +42,10 @@ macro(fi_set_git_vars)
                 ERROR_QUIET
             )
 
-            string(REGEX MATCH "[0-9]+(\\.[0-9])?(\\.[0-9])?(\\.[0-9])?" fi_git_version ${fi_git_tag})
+            string(REGEX MATCH "([0-9]+\\.[0-9]+)(\\.[0-9]+\\.[0-9]+)?" fi_git_version ${fi_git_tag})
             if(NOT fi_git_version)
-                message("无法从Tag信息中提取版本号, 默认为0")
+                message("无法从Tag信息中提取版本号, 默认为0.0")
+                set(fi_git_version "0.0")
             endif()
 
 

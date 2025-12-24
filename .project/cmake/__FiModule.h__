@@ -1,35 +1,35 @@
 #include <QtCore/QtGlobal>
 
-#ifdef FI_@module_upper_target@_BUILD
-    #define FI_@module_upper_target@_EXPORT Q_DECL_EXPORT
+#ifdef FI_@fi_folder_upper_name@_BUILD
+    #define FI_@fi_folder_upper_name@_EXPORT Q_DECL_EXPORT
 #else
-    #define FI_@module_upper_target@_EXPORT Q_DECL_IMPORT
+    #define FI_@fi_folder_upper_name@_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef FI_NAMESPACE
 #undef FI_NAMESPACE
 #endif
-#define FI_NAMESPACE namespace @module_namespace@ {
+#define FI_NAMESPACE namespace @fi_folder_namespace@ {
 
 #ifdef FI_CLASS
 #undef FI_CLASS
 #endif
-#define FI_CLASS FI_NAMESPACE class FI_@module_upper_target@_EXPORT
+#define FI_CLASS FI_NAMESPACE class FI_@fi_folder_upper_name@_EXPORT
 
 #ifdef FI_STRUCT
 #undef FI_STRUCT
 #endif
-#define FI_STRUCT FI_NAMESPACE struct FI_@module_upper_target@_EXPORT
+#define FI_STRUCT FI_NAMESPACE struct FI_@fi_folder_upper_name@_EXPORT
 
 #ifdef FI_TEMPLATE_STRUCT
 #undef FI_TEMPLATE_STRUCT
 #endif
-#define FI_TEMPLATE_STRUCT(...) FI_NAMESPACE template<__VA_ARGS__> struct FI_@module_upper_target@_EXPORT
+#define FI_TEMPLATE_STRUCT(...) FI_NAMESPACE template<__VA_ARGS__> struct FI_@fi_folder_upper_name@_EXPORT
 
 #ifdef FI_TEMPLATE_CLASS
 #undef FI_TEMPLATE_CLASS
 #endif
-#define FI_TEMPLATE_CLASS(...) FI_NAMESPACE template<__VA_ARGS__> class FI_@module_upper_target@_EXPORT
+#define FI_TEMPLATE_CLASS(...) FI_NAMESPACE template<__VA_ARGS__> class FI_@fi_folder_upper_name@_EXPORT
 
 #ifdef FI_END
 #undef FI_END

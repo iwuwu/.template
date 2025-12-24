@@ -9,11 +9,15 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/.fi_local)
     include(${CMAKE_SOURCE_DIR}/.fi_local)
 endif()
 
-cmake_path(GET CMAKE_SOURCE_DIR STEM fi_project_root_name)
+cmake_path(GET CMAKE_SOURCE_DIR STEM fi_project_name)
 
 fi_set_git_vars()
 
-set(fi_project_version ${fi_git_version})
+if(fi_git_version)
+    set(fi_project_version ${fi_git_version})
+else()
+    set(fi_project_version "0.0")
+endif()
 
 # 设置项目变量
 # cmake_policy(SET CMP0048 NEW)
@@ -85,7 +89,7 @@ macro(fi_project)
     endif()
 
     if(ENABLE_TESTING)
-        # include会自动enable_testing, 无需再设置
+        enable_testing()
         include(CTest)
         if(Catch2_FOUND)
             include(Catch)
@@ -94,7 +98,6 @@ macro(fi_project)
         endif()
     endif()
 
-    message("================================================")
     fi_add_subfolder()
     message("================================================")
     message("${PROJECT_NAME} ${PROJECT_VERSION} 配置完成")
