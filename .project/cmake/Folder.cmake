@@ -94,16 +94,16 @@ function(fi_folder)
             fi_add_folder("${FI_FOLDER_IMPORTS}")
         endif()
 
-        fi_add_qml("${FI_FOLDER_NAME}.lib")
+        fi_add_qml("_${FI_FOLDER_NAME}_")
 
     elseif(FI_FOLDER_LIB)
-        fi_add_lib("${FI_FOLDER_NAME}.lib")
+        fi_add_lib("_${FI_FOLDER_NAME}_")
     endif()
 
     if(DEFINED FI_FOLDER_TEST AND ENABLE_TESTING)
-        fi_add_test("${FI_FOLDER_NAME}.test" "${FI_FOLDER_TEST}")
+        fi_add_test("${FI_FOLDER_NAME}" "${FI_FOLDER_TEST}")
     elseif(FI_FOLDER_EXE)
-        fi_add_exe("${FI_FOLDER_NAME}.exe")
+        fi_add_exe("${FI_FOLDER_NAME}")
     endif()
 
     fi_install("${FI_FOLDER_TARGETS}")

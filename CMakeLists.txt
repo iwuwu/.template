@@ -2,6 +2,10 @@ include(.project/cmake/Project.cmake)
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 project(${FI_PROJECT_NAME} VERSION ${FI_GIT_VERSION} LANGUAGES CXX)
 
+file(GLOB subs "*")
+
+message("${subs}")
+
 fi_import(
     Qt6
     COMPONENTS Core Qml
