@@ -11,8 +11,8 @@
 
 FI_STRUCT PoseData : public QSharedData{
 
-  PoseData(){}
+    PoseData(){}
 
-  private :
+    private :
 
 } FI_END

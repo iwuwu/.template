@@ -13,6 +13,8 @@ macro(fi_install targets)
     install(
         TARGETS ${targets}
         EXPORT ${FI_FOLDER_NAME}Targets
+
+        PUBLIC_HEADER "include/${FI_FOLDR_PATH}/"
     )
 
     export(

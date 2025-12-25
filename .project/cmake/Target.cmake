@@ -7,6 +7,12 @@ macro(fi_set_interface target_name)
     )
     # 自动私有链接库所需要的Qt模块
     target_link_libraries(${target_name} PRIVATE Qt6::Core Qt6::Qml)
+
+    # 添加Target相关的头文件（以便在安装的时候使用）
+    set_target_properties(${target_name} PROPERTIES
+        PUBLIC_HEADER "${FI_FOLDER_H_FILES}"
+    )
+
     if(FI_FOLDER_PRIVATE)
         target_link_libraries(${target_name} PRIVATE ${FI_FOLDER_PRIVATE})
     endif()
