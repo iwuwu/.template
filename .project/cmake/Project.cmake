@@ -1,7 +1,7 @@
-set(fi_project_cmake_dir ${CMAKE_CURRENT_LIST_DIR})
-include(${fi_project_cmake_dir}/Utility.cmake)
-include(${fi_project_cmake_dir}/Import.cmake)
-include(${fi_project_cmake_dir}/Folder.cmake)
+set(FI_PROJECT_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
+include(${FI_PROJECT_CMAKE_DIR}/Utility.cmake)
+include(${FI_PROJECT_CMAKE_DIR}/Import.cmake)
+include(${FI_PROJECT_CMAKE_DIR}/Folder.cmake)
 
 
 # 导入本地设置变量
@@ -9,15 +9,9 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/.fi_local)
     include(${CMAKE_SOURCE_DIR}/.fi_local)
 endif()
 
-cmake_path(GET CMAKE_SOURCE_DIR STEM fi_project_name)
+cmake_path(GET CMAKE_SOURCE_DIR STEM FI_PROJECT_NAME)
 
 fi_set_git_vars()
-
-if(fi_git_version)
-    set(fi_project_version ${fi_git_version})
-else()
-    set(fi_project_version "0.0")
-endif()
 
 # 设置项目变量
 # cmake_policy(SET CMP0048 NEW)
@@ -42,7 +36,7 @@ endif()
 
 macro(fi_project)
     cmake_parse_arguments(
-        fi_project
+        FI_PROJECT
         "SHARED;STATIC;TESTING;DEBUG;RELEASE"
         "INSTALL_PATH"
         ""
@@ -66,24 +60,24 @@ macro(fi_project)
     qt_standard_project_setup(REQUIRES ${Qt6_VERSION})
 
     # 编译和启用测试
-    if(fi_project_TESTING)
-        set(ENABLE_TESTING ${fi_project_TESTING})
+    if(FI_PROJECT_TESTING)
+        set(ENABLE_TESTING ${FI_PROJECT_TESTING})
     endif()
 
-    if(fi_project_STATIC)
+    if(FI_PROJECT_STATIC)
         set(BUILD_SHARED_LIBS OFF)
     else()
         set(BUILD_SHARED_LIBS ON)
     endif()
 
-    if(fi_project_RELEASE)
+    if(FI_PROJECT_RELEASE)
         set(CMAKE_BUILD_TYPE "Release")
     else()
         set(CMAKE_BUILD_TYPE "Debug")
     endif()
-    if(fi_project_INSTALL_PATH)
+    if(FI_PROJECT_INSTALL_PATH)
         fi_set_install_prefix(
-            "${fi_project_INSTALL_PATH}"
+            "${FI_PROJECT_INSTALL_PATH}"
             "${CMAKE_SOURCE_DIR}/.install/${PROJECT_VERSION}/${CMAKE_BUILD_TYPE}/"
         )
     endif()
@@ -101,7 +95,7 @@ macro(fi_project)
     fi_add_subfolder()
     message("================================================")
     message("${PROJECT_NAME} ${PROJECT_VERSION} 配置完成")
-    message("代码基点: 分支 ${fi_git_branch} 第 ${fi_git_commit_count} 次提交 ${fi_git_hash}")
+    message("代码基点: 分支 ${FI_GIT_BRANCH} 第 ${FI_GIT_COMMIT_COUNT} 次提交 ${FI_GIT_HASH}")
     if(ENABLE_TESTING)
         message("单元测试: 开启")
     else()

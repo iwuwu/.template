@@ -1,4 +1,4 @@
 fi_folder(
-    LIB
+    QML
     PRIVATE Eigen3::Eigen
 )

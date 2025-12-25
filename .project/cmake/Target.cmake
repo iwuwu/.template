@@ -5,19 +5,20 @@ macro(fi_set_interface target_name)
         "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     )
+    # 自动私有链接库所需要的Qt模块
     target_link_libraries(${target_name} PRIVATE Qt6::Core Qt6::Qml)
-    if(fi_folder_PRIVATE)
-        target_link_libraries(${target_name} PRIVATE ${fi_folder_PRIVATE})
+    if(FI_FOLDER_PRIVATE)
+        target_link_libraries(${target_name} PRIVATE ${FI_FOLDER_PRIVATE})
     endif()
-    if(fi_folder_INTERFACE)
-        target_link_libraries(${target_name} INTERFACE ${fi_folder_INTERFACE})
+    if(FI_FOLDER_INTERFACE)
+        target_link_libraries(${target_name} INTERFACE ${FI_FOLDER_INTERFACE})
     endif()
-    if(fi_folder_PUBLIC)
-        target_link_libraries(${target_name} PUBLIC ${fi_folder_PUBLIC})
+    if(FI_FOLDER_PUBLIC)
+        target_link_libraries(${target_name} PUBLIC ${FI_FOLDER_PUBLIC})
     endif()
 
     #这里必须设为PRIVATE使得只有在本Target编译的时候会有这个宏，当别人导入的时候不是Interface
-    target_compile_definitions(${target_name} PRIVATE "FI_${fi_folder_upper_name}_BUILD")
+    target_compile_definitions(${target_name} PRIVATE "FI_${FI_FOLDER_UPPER_NAME}_BUILD")
     target_compile_definitions(
         ${target_name}
         PRIVATE
@@ -28,43 +29,44 @@ endmacro()
 
 macro(fi_add_qml target_name)
     # qml_module只接受2位版本号
-    string(REGEX MATCH "[0-9]+\.[0-9]+" qml_target_version "${fi_folder_VERSION}")
+    string(REGEX MATCH "[0-9]+\.[0-9]+" qml_target_version "${FI_FOLDER_VERSION}")
     qt_add_qml_module(
         "${target_name}"
-        URI ${fi_folder_uri}
+        URI ${FI_FOLDER_URI}
         VERSION ${qml_target_version}
-        QML_FILES ${fi_folder_qml_files} ${fi_folder_js_files}
-        SOURCES ${fi_folder_h_files} ${fi_folder_cpp_files}
-        RESOURCES ${fi_folder_assets_files}
-        IMPORTS TARGET ${fi_folder_IMPORTS} # 这个地方可能要判断是不是TAGET从而调用
-        DEPENDENCIES TARGET ${fi_folder_DEPENDS}
+        QML_FILES ${FI_FOLDER_QML_FILES} ${FI_FOLDER_JS_FILES}
+        SOURCES ${FI_FOLDER_H_FILES} ${FI_FOLDER_CPP_FILES}
+        RESOURCES ${FI_FOLDER_ASSET_FILES}
+        IMPORTS TARGET ${FI_FOLDER_IMPORTS} # 这个地方可能要判断是不是TAGET从而调用
+        DEPENDENCIES TARGET ${FI_FOLDER_DEPENDS}
     )
     fi_set_interface("${target_name}")
-    add_library("::${fi_folder_namespace}" ALIAS "${target_name}")
 
-    message("添加  QML: ${fi_folder_uri} ${qml_target_version}")
-    list(APPEND fi_folder_targets "${target_name}")
+    add_library("::${FI_FOLDER_NAMESPACE}" ALIAS "${target_name}")
+
+    message("添加 QML: ${FI_FOLDER_URI} ${qml_target_version}")
+    list(APPEND FI_FOLDER_TARGETS "${target_name}")
 endmacro()
 
 macro(fi_add_lib target_name)
-    qt_add_library("${target_name}" ${fi_folder_h_files} ${fi_folder_cpp_files})
+    qt_add_library("${target_name}" ${FI_FOLDER_H_FILES} ${FI_FOLDER_CPP_FILES})
     fi_set_interface("${target_name}")
-    add_library("::${fi_folder_namespace}" ALIAS "${target_name}")
+    add_library("::${FI_FOLDER_NAMESPACE}" ALIAS "${target_name}")
 
-    message("添加  LIB: ${target_name} ${fi_folder_VERSION}")
-    list(APPEND fi_folder_targets "${target_name}")
+    message("添加 LIB: ${target_name}")
+    list(APPEND FI_FOLDER_TARGETS "${target_name}")
 endmacro()
 
 macro(fi_add_exe target_name)
-    qt_add_executable("${target_name}" ${fi_folder_h_files} ${fi_folder_cpp_files})
+    qt_add_executable("${target_name}" ${FI_FOLDER_H_FILES} ${FI_FOLDER_CPP_FILES})
     fi_set_interface("${target_name}")
 
-    message("添加  EXE: ${target_name} ${fi_folder_VERSION}")
-    list(APPEND fi_folder_targets "${target_name}")
+    message("添加 EXE: ${target_name}")
+    list(APPEND FI_FOLDER_TARGETS "${target_name}")
 endmacro()
 
 macro(fi_add_test target_name main)
-    qt_add_executable("${target_name}" ${fi_folder_h_files} ${fi_folder_cpp_files})
+    qt_add_executable("${target_name}" ${FI_FOLDER_H_FILES} ${FI_FOLDER_CPP_FILES})
     fi_set_interface("${target_name}")
     if(Catch2_FOUND)
         if("${main}" STREQUAL "MAIN")
@@ -72,10 +74,11 @@ macro(fi_add_test target_name main)
         else()
             target_link_libraries("${target_name}" PRIVATE Catch2::Catch2WithMain)
         endif()
+        catch_discover_tests("${target_name}")
     else()
         add_test(NAME "${target_name}" COMMAND "${target_name}")
     endif()
 
-    message("添加 TEST: ${target_name} ${fi_folder_VERSION}")
-    list(APPEND fi_folder_targets ${target_name})
+    message("添加TEST: ${target_name}")
+    list(APPEND FI_FOLDER_TARGETS ${target_name})
 endmacro()

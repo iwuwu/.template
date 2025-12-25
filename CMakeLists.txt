@@ -1,6 +1,6 @@
 include(.project/cmake/Project.cmake)
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
-project(${fi_project_name} VERSION ${fi_project_version} LANGUAGES CXX)
+project(${FI_PROJECT_NAME} VERSION ${FI_GIT_VERSION} LANGUAGES CXX)
 
 fi_import(
     Qt6

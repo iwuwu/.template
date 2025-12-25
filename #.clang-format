@@ -1,0 +1,14 @@
+# Note: if you change any of the settings here, please reformat the entire
+# codebase as part of the same merge request, that will prevent subsequent
+# commits from being flagged as being improperly formatted.
+
+---
+# This configuration requires clang-format 16 or higher.
+BasedOnStyle: LLVM
+
+IndentWidth: 4
+
+Language: Cpp
+
+DerivePointerAlignment: false
+PointerAlignment: left

@@ -1,6 +1,6 @@
-include(${fi_project_cmake_dir}/File.cmake)
-include(${fi_project_cmake_dir}/Target.cmake)
-include(${fi_project_cmake_dir}/Install.cmake)
+include(${FI_PROJECT_CMAKE_DIR}/File.cmake)
+include(${FI_PROJECT_CMAKE_DIR}/Target.cmake)
+include(${FI_PROJECT_CMAKE_DIR}/Install.cmake)
 
 # 这里输入的相对于项目根目录的名称（可接受各种分隔符）
 function(fi_add_folder paths)
@@ -36,68 +36,78 @@ function(fi_folder)
     cmake_policy(SET CMP0174 NEW)
     cmake_parse_arguments(PARSE_ARGV
         0
-        fi_folder
+        FI_FOLDER
         "PROJECT;QML;LIB;EXE"
         "VERSION;TEST"
         "PUBLIC;PRIVATE;INTERFACE;DEPENDS;IMPORTS"
     )
 
-    cmake_path(RELATIVE_PATH CMAKE_CURRENT_SOURCE_DIR BASE_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE fi_folder_path)
-    if(NOT fi_folder_path)
+    cmake_path(RELATIVE_PATH CMAKE_CURRENT_SOURCE_DIR BASE_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE FI_FOLDER_PATH)
+    if(NOT FI_FOLDER_PATH)
         return()
     endif()
 
-    message("================================================")
-    message("添加: ${fi_folder_path}")
+    cmake_path(GET FI_FOLDER_PATH STEM FI_FOLDER_LAST_NAME)
+    string(REPLACE "/" "." FI_FOLDER_URI ${FI_FOLDER_PATH})
+    string(REPLACE "/" "_" FI_FOLDER_NAME ${FI_FOLDER_PATH})
+    string(REPLACE "/" "::" FI_FOLDER_NAMESPACE ${FI_FOLDER_PATH})
+    string(REPLACE "/" "" FI_FOLDER_CAMEL_NAME ${FI_FOLDER_PATH})
+    string(TOUPPER "${FI_FOLDER_NAME}" FI_FOLDER_UPPER_NAME)
 
-    cmake_path(GET fi_folder_path STEM fi_folder_last_name)
-    string(REPLACE "/" "." fi_folder_uri ${fi_folder_path})
-    string(REPLACE "/" "_" fi_folder_name ${fi_folder_path})
-    string(REPLACE "/" "::" fi_folder_namespace ${fi_folder_path})
-    string(REPLACE "/" "" fi_folder_camel_name ${fi_folder_path})
-    string(TOUPPER "${fi_folder_name}" fi_folder_upper_name)
-
-    cmake_path(GET fi_folder_path PARENT_PATH fi_folder_parent_path)
-    if(fi_folder_parent_path)
-        cmake_path(GET fi_folder_parent_path STEM fi_folder_parent_last_name)
-        string(REPLACE "/" "." fi_folder_parent_uri ${fi_folder_parent_path})
-        string(REPLACE "/" "_" fi_folder_parent_name ${fi_folder_parent_path})
-        string(REPLACE "/" "::" fi_folder_parent_namespace ${fi_folder_parent_path})
-        string(REPLACE "/" "" fi_folder_parent_camel_name ${fi_folder_parent_path})
-        string(TOUPPER "${fi_folder_parent_name}" fi_folder_parent_upper_name)
+    cmake_path(GET FI_FOLDER_PATH PARENT_PATH FI_FOLDER_PARENT_PATH)
+    if(FI_FOLDER_PARENT_PATH)
+        cmake_path(GET FI_FOLDER_PARENT_PATH STEM FI_FOLDER_PARENT_LAST_NAME)
+        string(REPLACE "/" "." FI_FOLDER_PARENT_URI ${FI_FOLDER_PARENT_PATH})
+        string(REPLACE "/" "_" FI_FOLDER_PARENT_NAME ${FI_FOLDER_PARENT_PATH})
+        string(REPLACE "/" "::" FI_FOLDER_PARENT_NAMESPACE ${FI_FOLDER_PARENT_PATH})
+        string(REPLACE "/" "" FI_FOLDER_PARENT_CAMEL_NAME ${FI_FOLDER_PARENT_PATH})
+        string(TOUPPER "${FI_FOLDER_PARENT_NAME}" FI_FOLDER_PARENT_UPPER_NAME)
     endif()
 
     fi_set_folder_files()
 
-    if(NOT fi_folder_VERSION)
-        set(fi_folder_VERSION ${PROJECT_VERSION})
+    if(NOT FI_FOLDER_VERSION MATCHES "[0-9]+(\\.[0-9]+)+")
+        set(FI_FOLDER_VERSION ${PROJECT_VERSION})
     endif()
 
-    if(fi_folder_PROJECT)
-        project(${fi_folder_name} VERSION ${fi_folder_VERSION} LANGUAGES CXX)
+    message("================================================")
+
+    if(FI_FOLDER_PROJECT)
+        project(${FI_FOLDER_NAME} VERSION ${FI_FOLDER_VERSION} LANGUAGES CXX)
     endif()
 
-    if(fi_folder_QML)
+    message("./${FI_FOLDER_PATH}")
+    # string(LENGTH "./${FI_FOLDER_PATH}" n)
+    # string(REPEAT "-" ${n} h)
+    # message(${h})
+    # message("")
+    # message("PROJECT ${PROJECT_NAME} ${PROJECT_VERSION}")
+    # message("")
+
+
+    if(FI_FOLDER_QML)
         # 编译Qml Module时，DEPENDS和IMPORTS的目标必须先于本目标存在
-        if(fi_folder_DEPENDS)
-            fi_add_folder("${fi_folder_DEPENDS}")
+        if(FI_FOLDER_DEPENDS)
+            fi_add_folder("${FI_FOLDER_DEPENDS}")
         endif()
-        if(fi_folder_IMPORTS)
-            fi_add_folder("${fi_folder_IMPORTS}")
+        if(FI_FOLDER_IMPORTS)
+            fi_add_folder("${FI_FOLDER_IMPORTS}")
         endif()
-        fi_add_qml("${fi_folder_name}")
-    elseif(fi_folder_LIB)
-        fi_add_lib("${fi_folder_name}")
+
+        fi_add_qml("${FI_FOLDER_NAME}.lib")
+
+    elseif(FI_FOLDER_LIB)
+        fi_add_lib("${FI_FOLDER_NAME}.lib")
     endif()
 
-    if(DEFINED fi_folder_TEST AND ENABLE_TESTING)
-        fi_add_test("${fi_folder_name}_test" "${fi_folder_TEST}")
-    elseif(fi_folder_EXE)
-        fi_add_exe("${fi_folder_name}_exe")
+    if(DEFINED FI_FOLDER_TEST AND ENABLE_TESTING)
+        fi_add_test("${FI_FOLDER_NAME}.test" "${FI_FOLDER_TEST}")
+    elseif(FI_FOLDER_EXE)
+        fi_add_exe("${FI_FOLDER_NAME}.exe")
     endif()
 
-    fi_install("${fi_folder_targets}")
-    unset(fi_folder_targets)
+    fi_install("${FI_FOLDER_TARGETS}")
+    unset(FI_FOLDER_TARGETS)
     fi_add_subfolder()
 endfunction()
 

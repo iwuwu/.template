@@ -28,24 +28,24 @@ macro(fi_set_git_vars)
         execute_process(
             COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            OUTPUT_VARIABLE fi_git_is_repo
+            OUTPUT_VARIABLE FI_GIT_IN_REPO
             OUTPUT_STRIP_TRAILING_WHITESPACE
             ERROR_QUIET
         )
-        if(fi_git_is_repo)
+        if(FI_GIT_IN_REPO)
             # 获取Git描述（版本信息）
             execute_process(
                 COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_VARIABLE fi_git_tag
+                OUTPUT_VARIABLE FI_GIT_TAG
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 ERROR_QUIET
             )
 
-            string(REGEX MATCH "([0-9]+\\.[0-9]+)(\\.[0-9]+\\.[0-9]+)?" fi_git_version ${fi_git_tag})
-            if(NOT fi_git_version)
+            string(REGEX MATCH "[0-9]+(\\.[0-9]+)+" FI_GIT_VERSION ${FI_GIT_TAG})
+            if(NOT FI_GIT_VERSION)
                 message("无法从Tag信息中提取版本号, 默认为0.0")
-                set(fi_git_version "0.0")
+                set(FI_GIT_VERSION "0.0")
             endif()
 
 
@@ -53,7 +53,7 @@ macro(fi_set_git_vars)
             execute_process(
                 COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_VARIABLE fi_git_hash
+                OUTPUT_VARIABLE FI_GIT_HASH
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 ERROR_QUIET
             )
@@ -61,7 +61,7 @@ macro(fi_set_git_vars)
             execute_process(
                 COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_VARIABLE fi_git_branch
+                OUTPUT_VARIABLE FI_GIT_BRANCH
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 ERROR_QUIET
             )
@@ -69,7 +69,7 @@ macro(fi_set_git_vars)
             execute_process(
                 COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_VARIABLE fi_gi_full_hash
+                OUTPUT_VARIABLE FI_GIT_FULL_HASH
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 ERROR_QUIET
             )
@@ -77,7 +77,7 @@ macro(fi_set_git_vars)
             execute_process(
                 COMMAND ${GIT_EXECUTABLE} rev-list --count HEAD
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_VARIABLE fi_git_commit_count
+                OUTPUT_VARIABLE FI_GIT_COMMIT_COUNT
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 ERROR_QUIET
             )
