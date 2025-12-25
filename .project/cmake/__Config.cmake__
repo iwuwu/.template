@@ -1,6 +1,8 @@
-set(@folder_target@_sub_packages "@folder_sub_packages@")
+@PACKAGE_INIT@
 
-if(@folder_target@_FIND_COMPONENTS)
+set(${FI_PACKAGE_NAME}_components "${FI_SUB_PACKAGES}")
+
+if(${FI_PACKAGE_NAME}_FIND_COMPONENTS)
     foreach(comp IN LISTS @folder_target@_FIND_COMPONENTS)
         if(NOT comp IN_LIST @folder_target@_sub_packages)
             set(@folder_target@_FOUND False)
