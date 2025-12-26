@@ -1,5 +1,5 @@
 fi_folder(
-    LIB
+    QML
     TEST
     PRIVATE Eigen3::Eigen
 )

@@ -1,5 +1,3 @@
 fi_folder(
-    PROJECT
     QML
-    TEST
 )

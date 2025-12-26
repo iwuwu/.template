@@ -3,7 +3,7 @@ macro(fi_set_interface target_name)
         ${target_name}
         PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+        "$<INSTALL_INTERFACE:.>"
     )
     # 自动私有链接库所需要的Qt模块
     target_link_libraries(${target_name} PRIVATE Qt6::Core Qt6::Qml)
@@ -77,8 +77,14 @@ macro(fi_add_test target_name main)
     if(Catch2_FOUND)
         if("${main}" STREQUAL "MAIN")
             target_link_libraries("${target_name}" PRIVATE Catch2::Catch2)
+            if(TARGET "Lib_${target_name}")
+                target_link_libraries("Lib_${target_name}" PRIVATE Catch2::Catch2)
+            endif()
         else()
             target_link_libraries("${target_name}" PRIVATE Catch2::Catch2WithMain)
+            if(TARGET "Lib_${target_name}")
+                target_link_libraries("Lib_${target_name}" PRIVATE Catch2::Catch2WithMain)
+            endif()
         endif()
         catch_discover_tests("${target_name}")
     else()
