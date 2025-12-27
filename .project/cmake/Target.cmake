@@ -88,6 +88,7 @@ macro(fi_add_test target_name main)
         endif()
         catch_discover_tests("${target_name}")
     else()
+        # TODO: add非Catch2的测试需要更进一步的设置
         add_test(NAME "${target_name}" COMMAND "${target_name}")
     endif()
 

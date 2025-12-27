@@ -1,13 +1,15 @@
 macro(fi_import_by_default package_name)
-    message("导入: ${package_name} 使用默认规则搜索")
-    if(NOT ${package_name}_FOUND)
+    if(${package_name}_FOUND)
+        message("导入: ${package_name} 使用外部导入(LOCAL文件或其他包引入)")
+    else()
+        message("导入: ${package_name} 使用默认规则搜索")
         find_package(
             ${package_name}
             ${ARGN}
             QUIET
         )
         if(NOT ${package_name}_FOUND)
-            message("失败: 默认规则搜索未找到CMake包配置文件")
+            message("失败: 未找到任何CMake包配置文件")
         endif()
     endif()
 endmacro()
@@ -95,30 +97,22 @@ macro(fi_import package_name)
         ${ARGN}
     )
 
-
-    if(${package_name}_FOUND)
-        message("导入: ${package_name} 使用LOCAL文件手工导入")
-    else()
+    if(NOT ${package_name}_FOUND)
         get_property(fi_import_targets_before DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-        fi_import_by_path("${package_name}" "${fi_import_PATH}" ${fi_import_UNPARSED_ARGUMENTS})
-        get_property(fi_import_targets_after DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
     endif()
+    fi_import_by_path("${package_name}" "${fi_import_PATH}" ${fi_import_UNPARSED_ARGUMENTS})
 
     if(${package_name}_FOUND)
-        if(fi_import_targets_after)
-            set(fi_import_targets ${fi_import_targets_after})
-        else()
+        if(NOT fi_import_targets) # 这里的fi_import_targets来自Config文件
             get_property(fi_import_targets DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
+            if(fi_import_targets_before)
+                list(REMOVE_ITEM fi_import_targets ${fi_import_targets_before})
+            else()
+                list(FILTER fi_import_targets INCLUDE REGEX "(${package_name}.*::.*)|(.*::${package_name}.*)")
+            endif()
         endif()
 
-        list(FILTER fi_import_targets INCLUDE REGEX "(${package_name}::.*)|(.*::${package_name}.*)")
         list(SORT fi_import_targets)
-
-        list(REMOVE_ITEM fi_import_targets_after ${fi_import_targets_before})
-        list(SORT fi_import_targets_after)
-
-        list(APPEND fi_import_targets ${fi_import_targets_after})
-        list(REMOVE_DUPLICATES fi_import_targets)
 
         get_cmake_property(fi_import_vars VARIABLES)
         list(FILTER fi_import_vars INCLUDE REGEX "^${package_name}_LIB.*")
@@ -128,7 +122,7 @@ macro(fi_import package_name)
         elseif(${package_name}_INCLUDE_DIR)
             set(fi_import_package_dir ${${package_name}_INCLUDE_DIR})
         else()
-
+            # TODO: 可从Target中提取IMPORT_LOCATION
         endif()
         message("成功: ${package_name} ${${package_name}_VERSION} 位于 ${fi_import_package_dir}")
 

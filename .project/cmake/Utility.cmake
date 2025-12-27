@@ -83,23 +83,25 @@ macro(fi_set_git_vars)
             )
         else()
             message("警告: 没有Git仓库, 无法使用Git相关功能")
+            set(FI_GIT_VERSION "0.0")
         endif()
     else()
         message("警告: 没有安装Git, 无法使用Git相关功能")
+        set(FI_GIT_VERSION "0.0")
     endif()
 endmacro()
 
-macro(fi_make_header_only_package namespace package_name version path)
+macro(fi_find_header_only_package namespace package_name version path)
     add_library("${package_name}::${package_name}" INTERFACE IMPORTED)
     target_include_directories("${namespace}::${package_name}" INTERFACE
         "${path}"
     )
     set("${package_name}_FOUND" TRUE)
     set("${package_name}_VERSION" ${version})
-    set("${package_name}_DIR" "${path}")
+    set("${package_name}_DIR" ${path})
 endmacro()
 
-macro(fi_make_package namespace package_name version path)
+macro(fi_find_package namespace package_name version path)
     add_library("${namespace}::${package_name}" UNKNOWN IMPORTED)
     set_target_properties("${namespace}::${package_name}" PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${path}/include/"

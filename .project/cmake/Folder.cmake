@@ -115,9 +115,8 @@ function(fi_folder)
         fi_add_exe("Exe_${FI_FOLDER_NAME}")
     endif()
 
-    fi_add_subfolder()
-
     fi_install("${FI_FOLDER_TARGETS}")
     unset(FI_FOLDER_TARGETS)
+    fi_add_subfolder()
 endfunction()
 

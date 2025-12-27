@@ -9,7 +9,7 @@ function(fi_set_sub_packages return)
     set(${return} ${${return}} PARENT_SCOPE)
 endfunction()
 
-macro(fi_install targets)
+function(fi_install targets)
     include(CMakePackageConfigHelpers)
 
     fi_set_sub_packages(FI_SUB_PACKAGES)
@@ -55,5 +55,5 @@ macro(fi_install targets)
         DESTINATION "${FI_FOLDER_PATH}"
         NAMESPACE Fi_Imported_
     )
-endmacro()
+endfunction()
 
