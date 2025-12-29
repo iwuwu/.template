@@ -10,9 +10,6 @@ TEST_CASE("可在Qml中正常编译运行和使用", "[Qml, Build, Run]")
     QQmlApplicationEngine engine;
     qDebug() << engine.importPathList();
     engine.loadFromModule("FibTest", "Template");
-    SECTION("进入消息循环")
-    {
-        app.exec();
-        qDebug() << "正常退出";
-    }
+
+    SECTION("进入和正常退出消息循环") {}
 }

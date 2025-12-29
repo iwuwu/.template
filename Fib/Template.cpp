@@ -5,7 +5,7 @@ FI_DYNAMIC_TYPE
 FI_INITOR(QObject* parent) : QObject(parent)
 {
     connect(this, &Template::objectNameChanged, this, &Template::onObjectNameChanged);
-    this->setObjectName("Pose");
+    this->setObjectName("Template");
 }
 
 FI_METHOD

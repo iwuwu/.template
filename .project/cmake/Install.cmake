@@ -10,30 +10,6 @@ function(fi_set_sub_packages return)
 endfunction()
 
 function(fi_install targets)
-    include(CMakePackageConfigHelpers)
-
-    fi_set_sub_packages(FI_SUB_PACKAGES)
-
-    configure_package_config_file(
-        "${FI_PROJECT_CMAKE_DIR}/__Config.cmake__"
-        "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}Config.cmake"
-        INSTALL_DESTINATION "${FI_FOLDER_PATH}"
-        NO_CHECK_REQUIRED_COMPONENTS_MACRO
-        NO_SET_AND_CHECK_MACRO
-    )
-
-    write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}ConfigVersion.cmake"
-        VERSION "${FI_FOLDER_VERSION}"
-        COMPATIBILITY AnyNewerVersion
-    )
-
-    install(
-        FILES "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}Config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}ConfigVersion.cmake"
-        DESTINATION "${FI_FOLDER_PATH}"
-    )
-
     install(
         TARGETS ${targets}
         EXPORT ${FI_FOLDER_NAME}Targets
@@ -58,6 +34,30 @@ function(fi_install targets)
 
     install(
         DIRECTORY "${CMAKE_BINARY_DIR}/qml/${FI_FOLDER_PATH}/"
+        DESTINATION "${FI_FOLDER_PATH}"
+    )
+
+    include(CMakePackageConfigHelpers)
+
+    fi_set_sub_packages(FI_SUB_PACKAGES)
+
+    configure_package_config_file(
+        "${FI_PROJECT_CMAKE_DIR}/__Config.cmake__"
+        "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}Config.cmake"
+        INSTALL_DESTINATION "${FI_FOLDER_PATH}"
+        NO_CHECK_REQUIRED_COMPONENTS_MACRO
+        NO_SET_AND_CHECK_MACRO
+    )
+
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}ConfigVersion.cmake"
+        VERSION "${FI_FOLDER_VERSION}"
+        COMPATIBILITY AnyNewerVersion
+    )
+
+    install(
+        FILES "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${FI_FOLDER_LASTNAME}ConfigVersion.cmake"
         DESTINATION "${FI_FOLDER_PATH}"
     )
 endfunction()
