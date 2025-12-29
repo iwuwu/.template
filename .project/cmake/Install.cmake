@@ -55,5 +55,10 @@ function(fi_install targets)
         DESTINATION "${FI_FOLDER_PATH}"
         NAMESPACE Fi_Imported_
     )
+
+    install(
+        DIRECTORY "${CMAKE_BINARY_DIR}/qml/${FI_FOLDER_PATH}/"
+        DESTINATION "${FI_FOLDER_PATH}"
+    )
 endfunction()
 

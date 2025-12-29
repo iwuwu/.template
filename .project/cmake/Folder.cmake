@@ -34,7 +34,7 @@ function(fi_add_subfolder)
     fi_add_folder("${paths}")
 endfunction()
 
-function(fi_folder)
+function(fi_module)
     cmake_policy(SET CMP0174 NEW)
     cmake_parse_arguments(PARSE_ARGV
         0

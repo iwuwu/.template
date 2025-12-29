@@ -1,3 +1,0 @@
-fi_folder(
-    QML
-)
