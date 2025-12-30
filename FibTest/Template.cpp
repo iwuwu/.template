@@ -8,8 +8,10 @@ TEST_CASE("可在Qml中正常编译运行和使用", "[Qml, Build, Run]")
     char* argv[]{};
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    qDebug() << engine.importPathList();
-    engine.loadFromModule("FibTest", "Template");
 
-    SECTION("进入和正常退出消息循环") {}
+    SECTION("正常载入模块")
+    {
+        qDebug() << engine.importPathList();
+        engine.loadFromModule("FibTest", "Template");
+    }
 }

@@ -5,6 +5,9 @@ import Fib
 TestCase {
     Template {
         id: template
-        objectName: "template"
-    }    
+        objectName: "Template"
+        onObjectNameChanged: {
+            console.log(template.objectName, "in Qml");
+        }
+    }
 }
