@@ -10,7 +10,7 @@ TestCase {
             console.log(obj.objectName, "in Qml");
         }
         Component.onCompleted: {
-            objectName = "Template Again";
+            obj.objectName = "Template Again";
         }
     }
 }
