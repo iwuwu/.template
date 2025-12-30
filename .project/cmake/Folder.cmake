@@ -7,7 +7,7 @@ function(fi_add_folder paths)
     if(paths)
         foreach(path IN LISTS paths)
             # #号开头的视为注释掉了的文件夹，不参与编译，当在DEPNDS里给出时自然忽略掉了
-            if(path MATCHES "^#")
+            if(path MATCHES "/#")
                 continue()
             endif()
             string(REGEX REPLACE "^::" "" path ${path})
@@ -35,7 +35,7 @@ function(fi_add_subfolder)
 endfunction()
 
 function(fi_module)
-    cmake_policy(SET CMP0174 NEW)
+    # cmake_policy(SET CMP0174 NEW)
     cmake_parse_arguments(PARSE_ARGV
         0
         FI_FOLDER
@@ -86,27 +86,28 @@ function(fi_module)
     # message("PROJECT ${PROJECT_NAME} ${PROJECT_VERSION}")
     # message("")
 
-
-    if(FI_FOLDER_QML)
-        # 编译Qml Module时，DEPENDS和IMPORTS的目标必须先于本目标存在
-        if(FI_FOLDER_DEPENDS)
-            foreach(depend IN LISTS FI_FOLDER_DEPENDS)
-                if(NOT TARGET ${depend})
-                    fi_add_folder("${depend}")
-                endif()
-            endforeach()
+    if((NOT DEFINED FI_FOLDER_TEST) OR (DEFINED FI_FOLDER_TEST AND ENABLE_TESTING))
+        if(FI_FOLDER_QML)
+            # 编译Qml Module时，DEPENDS和IMPORTS的目标必须先于本目标存在
+            if(FI_FOLDER_DEPENDS)
+                foreach(depend IN LISTS FI_FOLDER_DEPENDS)
+                    if(NOT TARGET ${depend})
+                        fi_add_folder("${depend}")
+                    endif()
+                endforeach()
+            endif()
+            if(FI_FOLDER_IMPORTS)
+                foreach(import IN LISTS FI_FOLDER_IMPORTS)
+                    if(NOT TARGET ${import})
+                        fi_add_folder("${import}")
+                    endif()
+                endforeach()
+            endif()
+            # 这里需要和Lib一致，config的时候不用麻烦
+            fi_add_qml("${FI_FOLDER_NAME}.lib")
+        elseif(FI_FOLDER_LIB)
+            fi_add_lib("${FI_FOLDER_NAME}.lib")
         endif()
-        if(FI_FOLDER_IMPORTS)
-            foreach(import IN LISTS FI_FOLDER_IMPORTS)
-                if(NOT TARGET ${import})
-                    fi_add_folder("${import}")
-                endif()
-            endforeach()
-        endif()
-        # 这里需要和Lib一致，config的时候不用麻烦
-        fi_add_qml("${FI_FOLDER_NAME}.lib")
-    elseif(FI_FOLDER_LIB)
-        fi_add_lib("${FI_FOLDER_NAME}.lib")
     endif()
 
     if(DEFINED FI_FOLDER_TEST AND ENABLE_TESTING)
@@ -123,8 +124,9 @@ function(fi_module)
         endif()
     endif()
 
+    fi_add_subfolder()
+
     fi_install("${FI_FOLDER_TARGETS}")
     unset(FI_FOLDER_TARGETS)
-    fi_add_subfolder()
 endfunction()
 

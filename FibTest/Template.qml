@@ -4,10 +4,13 @@ import Fib
 
 TestCase {
     Template {
-        id: template
+        id: obj
         objectName: "Template"
         onObjectNameChanged: {
-            console.log(template.objectName, "in Qml");
+            console.log(obj.objectName, "in Qml");
+        }
+        Component.onCompleted: {
+            objectName = "Template Again";
         }
     }
 }

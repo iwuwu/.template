@@ -1,5 +1,6 @@
-include(.project/cmake/Project.cmake)
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
+include(.project/cmake/Project.cmake)
+
 project(${FI_PROJECT_NAME} VERSION ${FI_GIT_VERSION} LANGUAGES CXX)
 
 fi_import(

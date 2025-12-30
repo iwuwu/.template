@@ -6,6 +6,12 @@
     #define FI_${FI_FOLDER_UPPER_NAME}_EXPORT Q_DECL_IMPORT
 #endif
 
+#ifdef FI_${FI_FOLDER_UPPER_NAME}_BUILD
+    #define ${FI_FOLDER_UPPER_NAME}_DECLSPEC
+#else
+    #define ${FI_FOLDER_UPPER_NAME}_DECLSPEC
+#endif
+
 #ifdef FI_NAMESPACE
 #undef FI_NAMESPACE
 #endif

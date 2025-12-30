@@ -11,7 +11,6 @@ TEST_CASE("可在Qml中正常编译运行和使用", "[Qml, Build, Run]")
 
     SECTION("正常载入模块")
     {
-        qDebug() << engine.importPathList();
         engine.loadFromModule("FibTest", "Template");
     }
 }

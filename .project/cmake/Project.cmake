@@ -87,19 +87,23 @@ macro(fi_project)
     endif()
 
     if(ENABLE_TESTING)
+        message("单元测试: 开启")
         enable_testing()
         include(CTest)
         if(Catch2_FOUND)
             include(Catch)
         else()
+            message("================================================")
             message("警告: 未导入Catch2, 无法使用Catch相关功能")
         endif()
     endif()
 
     fi_add_subfolder()
+
     message("================================================")
     message("${PROJECT_NAME} ${PROJECT_VERSION} 配置完成")
     message("代码基点: 分支 ${FI_GIT_BRANCH} 第 ${FI_GIT_COMMIT_COUNT} 次提交 ${FI_GIT_HASH}")
+
     if(ENABLE_TESTING)
         message("单元测试: 开启")
     else()
