@@ -34,6 +34,18 @@ macro(fi_set_interface target_name)
         "$<BUILD_INTERFACE:FI_HOME=\"${CMAKE_BINARY_DIR}\">"
         "$<INSTALL_INTERFACE:FI_HOME=\"$<INSTALL_PREFIX>\">"
     )
+
+    if(APPLE)
+        set_target_properties(${target_name} PROPERTIES
+            INSTALL_RPATH "@loader_path/../lib"
+            MACOSX_RPATH ON
+        )
+    elseif(UNIX)
+        set_target_properties(${target_name} PROPERTIES
+            INSTALL_RPATH "$ORIGIN/../lib"
+            BUILD_WITH_INSTALL_RPATH FALSE
+        )
+    endif()
 endmacro()
 
 macro(fi_add_qml target_name)

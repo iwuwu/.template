@@ -13,6 +13,7 @@ function(fi_install targets)
     if(NOT targets)
         return()
     endif()
+
     install(
         TARGETS ${targets}
         EXPORT ${FI_FOLDER_NAME}Targets

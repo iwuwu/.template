@@ -8,6 +8,7 @@ TEST_CASE("可在Qml中正常编译运行和使用", "[Qml, Build, Run]")
     char* argv[]{};
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+    engine.addImportPath(app.applicationDirPath() + "/../qml");
 
     SECTION("正常载入模块")
     {
