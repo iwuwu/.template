@@ -5,7 +5,7 @@ macro(fi_set_interface target_name)
         "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>"
         "$<INSTALL_INTERFACE:include>"
     )
-    # 自动私有链接库所需要的Qt模块
+    # 自动私有链接所需要的Qt模块
     target_link_libraries(${target_name} PRIVATE Qt6::Core Qt6::Qml)
     if(ENABLE_TESTING)
         target_link_libraries(${target_name} PRIVATE Qt6::QuickTest)
@@ -46,6 +46,9 @@ macro(fi_set_interface target_name)
             BUILD_WITH_INSTALL_RPATH FALSE
         )
     endif()
+
+    set_target_properties(${target_name} PROPERTIES OUTPUT_NAME "${FI_FOLDER_CAMEL_NAME}")
+    set_target_properties(${target_name} PROPERTIES PREFIX "")
 endmacro()
 
 macro(fi_add_qml target_name)
