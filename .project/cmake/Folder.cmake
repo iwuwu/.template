@@ -49,6 +49,8 @@ function(fi_module)
         return()
     endif()
 
+    message("================================================")
+
     cmake_path(GET FI_FOLDER_PATH STEM FI_FOLDER_LASTNAME)
     string(REPLACE "/" "." FI_FOLDER_URI ${FI_FOLDER_PATH})
     string(REPLACE "/" "_" FI_FOLDER_NAME ${FI_FOLDER_PATH})
@@ -72,7 +74,6 @@ function(fi_module)
         set(FI_FOLDER_VERSION ${PROJECT_VERSION})
     endif()
 
-    message("================================================")
 
     if(FI_FOLDER_PROJECT)
         project(${FI_FOLDER_NAME} VERSION ${FI_FOLDER_VERSION} LANGUAGES CXX)

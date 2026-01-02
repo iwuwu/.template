@@ -3,7 +3,7 @@ macro(fi_set_interface target_name)
         ${target_name}
         PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>"
-        "$<INSTALL_INTERFACE:.>"
+        "$<INSTALL_INTERFACE:include>"
     )
     # 自动私有链接库所需要的Qt模块
     target_link_libraries(${target_name} PRIVATE Qt6::Core Qt6::Qml)
@@ -45,8 +45,8 @@ macro(fi_add_qml target_name)
         VERSION ${qml_target_version}
         QML_FILES ${FI_FOLDER_QML_FILES} ${FI_FOLDER_JS_FILES}
         SOURCES ${FI_FOLDER_H_FILES} ${FI_FOLDER_CPP_FILES}
-        RESOURCES ${FI_FOLDER_ASSET_FILES}
-        IMPORTS TARGET ${FI_FOLDER_IMPORTS} # 这个地方可能要判断是不是TAGET从而调用
+        RESOURCES ${FI_FOLDER_RES_FILES}
+        IMPORTS TARGET ${FI_FOLDER_IMPORTS} # 这两个地方只能传本项目一同编译的目标
         DEPENDENCIES TARGET ${FI_FOLDER_DEPENDS}
         OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml/${FI_FOLDER_PATH}"
     )

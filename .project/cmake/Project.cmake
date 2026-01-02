@@ -5,20 +5,13 @@ include(${FI_PROJECT_CMAKE_DIR}/Folder.cmake)
 
 
 # 导入本地设置变量
-if(EXISTS ${CMAKE_SOURCE_DIR}/fi_local.cmake)
-    include(${CMAKE_SOURCE_DIR}/fi_local.cmake)
+if(EXISTS ${CMAKE_SOURCE_DIR}/.fi_local.cmake)
+    include(${CMAKE_SOURCE_DIR}/.fi_local.cmake)
 endif()
 
 cmake_path(GET CMAKE_SOURCE_DIR STEM FI_PROJECT_NAME)
 
 fi_set_git_vars()
-
-# 设置项目变量
-# cmake_policy(SET CMP0048 NEW)
-# cmake_policy(SET CMP0011 NEW)
-# cmake_policy(SET CMP0177 NEW)
-# cmake_policy(SET CMP0167 NEW)
-# cmake_policy(SET CMP0174 NEW) #使得复杂参数可以为空
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -87,7 +80,6 @@ macro(fi_project)
     endif()
 
     if(ENABLE_TESTING)
-        message("单元测试: 开启")
         enable_testing()
         include(CTest)
         if(Catch2_FOUND)
