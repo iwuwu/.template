@@ -49,6 +49,4 @@ macro(fi_set_folder_files)
 
     file(GLOB_RECURSE FI_FOLDER_RES_FILES LIST_DIRECTORIES false RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS ".res/*")
     list(FILTER FI_FOLDER_RES_FILES EXCLUDE REGEX "/#")
-
-    message("${FI_FOLDER_RES_FILES}")
 endmacro()
