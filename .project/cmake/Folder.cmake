@@ -125,9 +125,10 @@ function(fi_module)
         endif()
     endif()
 
-    fi_add_subfolder()
 
     fi_install("${FI_FOLDER_TARGETS}")
     unset(FI_FOLDER_TARGETS)
+
+    fi_add_subfolder()
 endfunction()
 

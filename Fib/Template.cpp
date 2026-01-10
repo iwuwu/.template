@@ -5,7 +5,13 @@ FI_DYNAMIC_TYPE
 FI_INITOR(QObject* parent) : QObject(parent)
 {
     connect(this, &Template::objectNameChanged, this, &Template::onObjectNameChanged);
-    this->setObjectName("Template");
+    this->setObjectName("Hello World");
+    qDebug() << objectName() + " Constructed In C++";
+}
+
+FI_DESTOR
+{
+    qDebug() << objectName() + " Destructed In C++";
 }
 
 FI_METHOD
@@ -23,5 +29,5 @@ setObjectName(const QString& objectName)->bool
 FI_METHOD
 onObjectNameChanged(const QString& objectName)->void
 {
-    qDebug() << objectName << "in C++";
+    qDebug() << "Object Name Changed To " + objectName + " In C++";
 }

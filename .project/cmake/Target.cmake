@@ -30,7 +30,7 @@ macro(fi_set_interface target_name)
     target_compile_definitions(${target_name} PRIVATE "FI_${FI_FOLDER_UPPER_NAME}_BUILD")
     target_compile_definitions(
         ${target_name}
-        PRIVATE
+        PUBLIC
         "$<BUILD_INTERFACE:FI_HOME=\"${CMAKE_BINARY_DIR}\">"
         "$<INSTALL_INTERFACE:FI_HOME=\"$<INSTALL_PREFIX>\">"
     )
@@ -63,7 +63,7 @@ macro(fi_add_qml target_name)
         RESOURCES ${FI_FOLDER_RES_FILES}
         IMPORTS TARGET ${FI_FOLDER_IMPORTS} # 这两个地方只能传本项目一同编译的目标
         DEPENDENCIES TARGET ${FI_FOLDER_DEPENDS}
-        OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml/${FI_FOLDER_PATH}"
+        OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/qml/${FI_FOLDER_PATH}"
     )
     fi_set_interface("${target_name}")
 
@@ -96,13 +96,13 @@ macro(fi_add_test target_name main)
     if(Catch2_FOUND)
         if("${main}" STREQUAL "MAIN")
             target_link_libraries("${target_name}" PRIVATE Catch2::Catch2)
-            if(TARGET "${FI_FOLDER_NAME}.lib")
-                target_link_libraries("${FI_FOLDER_NAME}.lib" PRIVATE Catch2::Catch2)
+            if(TARGET "${FI_FOLDER_CAMEL_NAME}.lib")
+                target_link_libraries("${FI_FOLDER_CAMEL_NAME}.lib" PRIVATE Catch2::Catch2)
             endif()
         else()
             target_link_libraries("${target_name}" PRIVATE Catch2::Catch2WithMain)
-            if(TARGET "${FI_FOLDER_NAME}.lib")
-                target_link_libraries("${FI_FOLDER_NAME}.lib" PRIVATE Catch2::Catch2WithMain)
+            if(TARGET "${FI_FOLDER_CAMEL_NAME}.lib")
+                target_link_libraries("${FI_FOLDER_CAMEL_NAME}.lib" PRIVATE Catch2::Catch2WithMain)
             endif()
         endif()
         catch_discover_tests("${target_name}")

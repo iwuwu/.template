@@ -37,8 +37,8 @@ function(fi_install targets)
     )
 
     install(
-        DIRECTORY "${CMAKE_BINARY_DIR}/qml/"
-        DESTINATION "qml"
+        DIRECTORY "${CMAKE_BINARY_DIR}/bin/qml/"
+        DESTINATION "bin/qml"
     )
 
     include(CMakePackageConfigHelpers)

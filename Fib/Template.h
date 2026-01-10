@@ -15,6 +15,7 @@ Template : public QObject
 
 public:
     Template(QObject* parent = nullptr);
+    ~Template() noexcept;
 
 signals:
     void objectNameChanged(const QString& objectName);
