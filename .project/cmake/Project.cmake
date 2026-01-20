@@ -1,5 +1,3 @@
-project(Fi VERSION 0.0 LANGUAGES CXX)
-
 set(FI_PROJECT_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
 include(${FI_PROJECT_CMAKE_DIR}/Utils.cmake)
 include(${FI_PROJECT_CMAKE_DIR}/Import.cmake)
