@@ -92,7 +92,7 @@ macro(fi_set_git_vars)
 endmacro()
 
 macro(fi_find_header_only_package namespace package_name version path)
-    add_library("${package_name}::${package_name}" INTERFACE IMPORTED)
+    add_library("${namespace}::${package_name}" INTERFACE IMPORTED)
     target_include_directories("${namespace}::${package_name}" INTERFACE
         "${path}"
     )
@@ -102,11 +102,19 @@ macro(fi_find_header_only_package namespace package_name version path)
 endmacro()
 
 macro(fi_find_package namespace package_name version path)
+    string(TOLOWER "${package_name}" lower_package_name)
+    find_library(
+        ${package_name}_lib
+        NAMES "${package_name}" "lib${package_name}" "${lower_package_name}" "lib${lower_package_name}"
+        PATHS "${path}" "${path}/lib" "${path}/bin"
+        NO_DEFAULT_PATH
+    )
+    message("${${package_name}_lib}")
     add_library("${namespace}::${package_name}" UNKNOWN IMPORTED)
     set_target_properties("${namespace}::${package_name}" PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${path}/include/"
-        IMPORTED_LOCATION "${path}/lib/"
-        IMPORTED_IMPLIB "${path}/lib/"
+        IMPORTED_LOCATION "${${package_name}_lib}"
+        IMPORTED_IMPLIB "${path}/lib/" #这里需要改成windows需要的文件名和后缀名。
     )
     set("${package_name}_FOUND" TRUE)
     set("${package_name}_VERSION" ${version})

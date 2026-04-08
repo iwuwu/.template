@@ -8,8 +8,10 @@ fi_import(
     COMPONENTS Core Qml Gui Quick QuickTest
 )
 fi_import(Catch2)
+fi_import(SQLite3)
+fi_import(ExprTk)
 
-fi_project()
+
 
 
 
