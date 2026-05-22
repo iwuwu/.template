@@ -79,7 +79,7 @@ function(fi_module)
         project(${FI_FOLDER_NAME} VERSION ${FI_FOLDER_VERSION} LANGUAGES CXX)
     endif()
 
-    message("./${FI_FOLDER_PATH}")
+    message("目录:./${FI_FOLDER_PATH}")
     # string(LENGTH "./${FI_FOLDER_PATH}" n)
     # string(REPEAT "-" ${n} h)
     # message(${h})

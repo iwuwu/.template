@@ -101,7 +101,7 @@ macro(fi_find_header_only_package namespace package_name version path)
     set("${package_name}_DIR" ${path})
 endmacro()
 
-macro(fi_find_package namespace package_name version path)
+macro(fi_find_gnu_package namespace package_name version path)
     string(TOLOWER "${package_name}" lower_package_name)
     find_library(
         ${package_name}_lib
@@ -109,12 +109,18 @@ macro(fi_find_package namespace package_name version path)
         PATHS "${path}" "${path}/lib" "${path}/bin"
         NO_DEFAULT_PATH
     )
+    find_file(
+        ${package_name}_dll
+        NAMES "${package_name}" "lib${package_name}" "${lower_package_name}" "lib${lower_package_name}"
+    )
+
     message("${${package_name}_lib}")
+    list(TRANSFORM ${package_name}_lib REPLACE ".dll$" ".lib")
     add_library("${namespace}::${package_name}" UNKNOWN IMPORTED)
     set_target_properties("${namespace}::${package_name}" PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${path}/include/"
-        IMPORTED_LOCATION "${${package_name}_lib}"
-        IMPORTED_IMPLIB "${path}/lib/" #这里需要改成windows需要的文件名和后缀名。
+        IMPORTED_IMPLIB "${${package_name}_lib}"
+        IMPORTED_LOCATION "${path}/lib/" #这里需要改成windows需要的文件名和后缀名。
     )
     set("${package_name}_FOUND" TRUE)
     set("${package_name}_VERSION" ${version})

@@ -6,7 +6,6 @@ macro(fi_import_by_default package_name)
         find_package(
             ${package_name}
             ${ARGN}
-            QUIET
         )
         if(NOT ${package_name}_FOUND)
             message("失败: 未找到任何CMake包配置文件")
@@ -23,7 +22,6 @@ macro(fi_import_by_env_path package_name)
                 ${ARGN}
                 HINTS "$ENV{${package_name}_PATH}"
                 NO_DEFAULT_PATH
-                QUIET
             )
             if(NOT ${package_name}_FOUND)
                 message("失败: 路径中未找到CMake包配置文件")
@@ -47,7 +45,6 @@ macro(fi_import_by_file_path package_name)
                 ${ARGN}
                 HINTS "${${package_name}_PATH}"
                 NO_DEFAULT_PATH
-                QUIET
             )
             if(NOT ${package_name}_FOUND)
                 message("失败: 路径中未找到CMake包配置文件")
@@ -72,7 +69,6 @@ macro(fi_import_by_path package_name path)
                 ${ARGN}
                 HINTS "${path}"
                 NO_DEFAULT_PATH
-                QUIET
             )
             if(NOT ${package_name}_FOUND)
                 message("失败: 路径中未找到CMake包配置文件")
