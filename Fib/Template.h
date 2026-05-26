@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QProperty>
 #include <QString>
 #include <QtQml>
 
@@ -29,5 +30,8 @@ public slots:
 protected:
     void classBegin() override;
     void componentComplete() override;
+
+private:
+    QString m_message;
 }
 FI_END
