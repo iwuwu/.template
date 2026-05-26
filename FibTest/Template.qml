@@ -1,7 +1,6 @@
 import QtQuick
 import QtTest
 import Fib
-import QtQuick.Controls
 
 TestCase {
     Template {
@@ -16,15 +15,6 @@ TestCase {
         }
         Component.onDestruction: {
             console.log(obj.objectName + " Destructed In Qml");
-        }
-    }
-    Button {
-        text: "haha"
-        Component.onCompleted: {
-            var a = 100;
-            function add(a, b) {
-                return a + b;
-            }
         }
     }
 }
