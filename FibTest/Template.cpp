@@ -5,7 +5,7 @@
 TEST_CASE("可在Qml中正常编译运行和使用", "[Qml, Build, Run]")
 {
     int argc = 0;
-    char* argv[]{};
+    char* argv[]{nullptr};
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
     qDebug() << "Qml导入路径: " << engine.importPathList().join(", ");

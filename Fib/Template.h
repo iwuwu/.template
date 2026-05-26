@@ -7,10 +7,12 @@
 #include "./FiModule.h"
 
 FI_CLASS
-Template : public QObject
+Template : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(QString objectName READ objectName WRITE setObjectName NOTIFY objectNameChanged)
+
+    Q_INTERFACES(QQmlParserStatus)
     QML_ELEMENT
 
 public:
@@ -23,5 +25,9 @@ signals:
 public slots:
     bool setObjectName(const QString& objectName);
     void onObjectNameChanged(const QString& objectName);
+
+protected:
+    void classBegin() override;
+    void componentComplete() override;
 }
 FI_END

@@ -7,14 +7,16 @@ TestCase {
         id: obj
         objectName: "Template"
         onObjectNameChanged: {
-            console.log("Object Name Change To " + obj.objectName + " In Qml");
+            console.log("        onObjectNameChanged(\"" + obj.objectName + "\"){}");
         }
         Component.onCompleted: {
-            console.log(obj.objectName + " Constructed In Qml");
-            obj.objectName = "Hello World Again";
+            console.log("Component.onCompleted() {");
+            console.log("    objectName = \"" + obj.objectName + " Hello World Again\"");
+            obj.objectName = obj.objectName + " Hello World Again";
+            console.log("}\n");
         }
         Component.onDestruction: {
-            console.log(obj.objectName + " Destructed In Qml");
+            console.log("Component.onDestruction() {}");
         }
     }
 }
